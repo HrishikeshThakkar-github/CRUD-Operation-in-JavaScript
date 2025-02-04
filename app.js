@@ -90,3 +90,9 @@ function update() {
     cancelUpdate();
     readALL();
 }
+
+function deleteItem(id) {
+    data = data.filter(rec => rec.id !== id);
+
+    readALL();
+}
