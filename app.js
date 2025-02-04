@@ -96,3 +96,28 @@ function deleteItem(id) {
 
     readALL();
 }
+
+
+function search() {
+    var searchValue = document.querySelector(".search-box").value.toLowerCase();
+
+    var filteredData = data.filter(record =>
+        record.name.toLowerCase().includes(searchValue) || record.price.toString().includes(searchValue)
+    );
+
+    readALL(filteredData);
+}
+
+let sortOrder = { name: 'desc', price: 'desc' };
+
+function sortTable(field) {
+    if (sortOrder[field] === 'asc') {
+        data.sort((a, b) => (a[field] > b[field] ? 1 : -1));
+        sortOrder[field] = 'desc';
+    } else {
+        data.sort((a, b) => (a[field] < b[field] ? 1 : -1));
+        sortOrder[field] = 'asc';
+    }
+
+    readALL();
+}
