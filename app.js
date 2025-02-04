@@ -61,3 +61,32 @@ function add() {
     cancelCreate();
     readALL();
 }
+
+function edit(id) {
+    document.querySelector(".update_form").style.display = "block";
+
+    var obj = data.find(rec => rec.id === id);
+    document.querySelector(".pid").value = obj.id;
+    document.querySelector(".upname").value = obj.name;
+    document.querySelector(".updesc").value = obj.description;
+    document.querySelector(".upprice").value = obj.price;
+    document.querySelector(".upimage").value = obj.image;
+}
+
+function cancelUpdate() {
+    document.querySelector(".update_form").style.display = "none";
+}
+
+function update() {
+    var id = parseInt(document.querySelector(".pid").value);
+    var name = document.querySelector(".upname").value;
+    var description=document.querySelector(".updesc").value = obj.description;
+    var price = document.querySelector(".upprice").value;
+    var image = document.querySelector(".upimage").value;
+
+    var index = data.findIndex(rec => rec.id === id);
+    data[index] = { id, name,description, price: parseFloat(price), image };
+
+    cancelUpdate();
+    readALL();
+}
