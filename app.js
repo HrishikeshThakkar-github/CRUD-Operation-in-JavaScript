@@ -23,6 +23,11 @@ function readALL(filteredData = data) {
             </td>
         </tr>`;
     });
+
+    // filteredData.forEach(
+    //     const row = document.createElement('tr');
+    //     tabledata.appendChild()
+    // )
 }
 
 document.addEventListener('DOMContentLoaded', readALL);
@@ -40,14 +45,18 @@ function cancelCreate() {
 function add() {
     var name = document.querySelector(".pname").value;
     var price = document.querySelector(".pprice").value;
+    var description = document.querySelector(".pdesc").value;
     var imageInput = document.querySelector(".pimage").files[0];
 
+
+console.log("add");
+readALL();
     if (!imageInput) {
         alert("Please select an image.");
         return;
     }
 
-    if (imageInput.size > 5 * 1024 * 1024) { // 5MB max
+    if (imageInput.size > 1024 * 1024) { 
         alert("Image size exceeds 5MB!");
         return;
     }
@@ -70,13 +79,6 @@ function add() {
         readALL();
     };
 
-    var description = document.querySelector(".pdesc").value;
-
-    var newObj = { id: Date.now(), name, price: parseFloat(price), image, description };
-    data.push(newObj);
-
-    cancelCreate();
-    readALL();
 }
 
 function edit(id) {
@@ -86,6 +88,7 @@ function edit(id) {
     document.querySelector(".pid").value = obj.id;
     document.querySelector(".upname").value = obj.name;
     document.querySelector(".upprice").value = obj.price;
+    document.querySelector(".updesc").value = obj.description;
     document.querySelector(".upimage").value = obj.image;
     document.querySelector(".updesc").value = obj.description;
 }
@@ -98,9 +101,10 @@ function update() {
     var id = parseInt(document.querySelector(".pid").value);
     var name = document.querySelector(".upname").value;
     var price = document.querySelector(".upprice").value;
+    var description = document.querySelector(".updesc").value;
     var imageInput = document.querySelector(".upimage").files[0];
     var image = data.find(rec => rec.id === id).image; // Default to old image
-
+    var description = document.querySelector(".updesc").value;
     if (imageInput) {
         if (imageInput.size > 5 * 1024 * 1024) {
             alert("Image size exceeds 5MB!");
@@ -125,7 +129,7 @@ function update() {
         readALL();
     }
 
-    var description = document.querySelector(".updesc").value;
+    
 
     var index = data.findIndex(rec => rec.id === id);
     data[index] = { id, name, price: parseFloat(price), image, description };
@@ -157,16 +161,16 @@ function sortTable(field) {
         data.sort((a, b) => (a[field] > b[field] ? 1 : -1));
         sortOrder[field] = 'desc';
         if (field === 'name')
-            document.querySelector("#sortn").innerHTML = "↑"
+            document.querySelector("#sortn").innerHTML = " sort by name ↑"
         if (field === 'price')
-            document.querySelector("#sortp").innerHTML = "↑"
+            document.querySelector("#sortp").innerHTML = " sort by price ↑"
     } else {
         data.sort((a, b) => (a[field] < b[field] ? 1 : -1));
         sortOrder[field] = 'asc';
         if (field === 'name')
-            document.querySelector("#sortn").innerHTML = "↓"
+            document.querySelector("#sortn").innerHTML = " sort by name ↓"
         if (field === 'price')
-            document.querySelector("#sortp").innerHTML = "↓"
+            document.querySelector("#sortp").innerHTML = " sort by price ↓"
     }
 
     readALL();
