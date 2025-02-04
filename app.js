@@ -26,3 +26,38 @@ function readALL(filteredData = data) {
 }
 
 document.addEventListener('DOMContentLoaded', readALL);  // we can also do this by adding onload="readALL" in body tag so that every time the table gets loadded when it gets opened
+
+
+function create() {
+    document.querySelector(".create_form").style.display = "block";
+    document.querySelector(".add-btn").style.display = "none";
+}
+
+function cancelCreate() {
+    document.querySelector(".create_form").style.display = "none";
+    document.querySelector(".add-btn").style.display = "block";
+}
+
+function* idGenerator() {
+    let id = Number(localStorage.getItem('id')) || 0; // Get saved ID or start at 0
+    while (true) {
+        id++; // Increment ID
+        localStorage.setItem('id', id); // Save updated ID
+        yield id; // Return new ID
+    }
+}
+ 
+const gen = idGenerator(); // Keep generator outside the function to persist
+ 
+function add() {
+    var name = document.querySelector(".pname").value;
+    var description = document.querySelector(".pdesc").value;
+    var price = document.querySelector(".pprice").value;
+    var image = document.querySelector(".pimage").value;
+ 
+    var newObj = { id: gen.next().value, name,description, price: parseFloat(price), image };
+    data.push(newObj);
+ 
+    cancelCreate();
+    readALL();
+}
