@@ -1,7 +1,7 @@
 let data = JSON.parse(localStorage.getItem("products")) || [
-    // { id: 1, name: "Laptop", price: 50000, image: "https://via.placeholder.com/60" },
-    // { id: 2, name: "Phone", price: 30000, image: "https://via.placeholder.com/60" },
-    // { id: 3, name: "Tablet", price: 20000, image: "https://via.placeholder.com/60" }
+    // { id: 1, name: "Laptop", price: 50000, image: "https://via.placeholder.com/60", description: "High-performance laptop" },
+    // { id: 2, name: "Phone", price: 30000, image: "https://via.placeholder.com/60", description: "Latest smartphone" },
+    // { id: 3, name: "Tablet", price: 20000, image: "https://via.placeholder.com/60", description: "Portable tablet device" }
 ];
 
 function readALL(filteredData = data) {
@@ -14,9 +14,9 @@ function readALL(filteredData = data) {
         tabledata.innerHTML += `<tr>
             <td>${record.id}</td>
             <td>${record.name}</td>
-            <td>${record.description}</td>
             <td>₹${record.price}</td>
             <td><img src="${record.image}" class="product-img"></td>
+            <td>${record.description}</td>
             <td>
                 <button class="btn btn-danger btn-sm" onclick="deleteItem(${record.id})">Delete</button>
                 <button class="btn btn-warning btn-sm" onclick="edit(${record.id})">Edit</button>
@@ -25,8 +25,7 @@ function readALL(filteredData = data) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', readALL);  // we can also do this by adding onload="readALL" in body tag so that every time the table gets loadded when it gets opened
-
+document.addEventListener('DOMContentLoaded', readALL);
 
 function create() {
     document.querySelector(".create_form").style.display = "block";
@@ -38,26 +37,15 @@ function cancelCreate() {
     document.querySelector(".add-btn").style.display = "block";
 }
 
-function* idGenerator() {
-    let id = Number(localStorage.getItem('id')) || 0; // Get saved ID or start at 0
-    while (true) {
-        id++; // Increment ID
-        localStorage.setItem('id', id); // Save updated ID
-        yield id; // Return new ID
-    }
-}
- 
-const gen = idGenerator(); // Keep generator outside the function to persist
- 
 function add() {
     var name = document.querySelector(".pname").value;
-    var description = document.querySelector(".pdesc").value;
     var price = document.querySelector(".pprice").value;
     var image = document.querySelector(".pimage").value;
- 
-    var newObj = { id: gen.next().value, name,description, price: parseFloat(price), image };
+    var description = document.querySelector(".pdesc").value;
+
+    var newObj = { id: Date.now(), name, price: parseFloat(price), image, description };
     data.push(newObj);
- 
+
     cancelCreate();
     readALL();
 }
@@ -68,9 +56,9 @@ function edit(id) {
     var obj = data.find(rec => rec.id === id);
     document.querySelector(".pid").value = obj.id;
     document.querySelector(".upname").value = obj.name;
-    document.querySelector(".updesc").value = obj.description;
     document.querySelector(".upprice").value = obj.price;
     document.querySelector(".upimage").value = obj.image;
+    document.querySelector(".updesc").value = obj.description;
 }
 
 function cancelUpdate() {
@@ -80,12 +68,12 @@ function cancelUpdate() {
 function update() {
     var id = parseInt(document.querySelector(".pid").value);
     var name = document.querySelector(".upname").value;
-    var description=document.querySelector(".updesc").value = obj.description;
     var price = document.querySelector(".upprice").value;
     var image = document.querySelector(".upimage").value;
+    var description = document.querySelector(".updesc").value;
 
     var index = data.findIndex(rec => rec.id === id);
-    data[index] = { id, name,description, price: parseFloat(price), image };
+    data[index] = { id, name, price: parseFloat(price), image, description };
 
     cancelUpdate();
     readALL();
@@ -93,30 +81,37 @@ function update() {
 
 function deleteItem(id) {
     data = data.filter(rec => rec.id !== id);
-
     readALL();
 }
 
-
 function search() {
     var searchValue = document.querySelector(".search-box").value.toLowerCase();
-
     var filteredData = data.filter(record =>
-        record.name.toLowerCase().includes(searchValue) || record.price.toString().includes(searchValue)
+        record.name.toLowerCase().includes(searchValue) || 
+        record.description.toLowerCase().includes(searchValue) ||
+        record.price.toString().includes(searchValue)
     );
 
     readALL(filteredData);
 }
 
-let sortOrder = { name: 'desc', price: 'desc' };
+let sortOrder = { name: 'asc', price: 'asc' };
 
 function sortTable(field) {
-    if (sortOrder[field] === 'asc') {
+    if (sortOrder[field] === 'asc' ) {
         data.sort((a, b) => (a[field] > b[field] ? 1 : -1));
         sortOrder[field] = 'desc';
+        if(field==='name')
+        document.querySelector("#sortn").innerHTML="↑"
+        if(field==='price')
+        document.querySelector("#sortp").innerHTML="↑"
     } else {
         data.sort((a, b) => (a[field] < b[field] ? 1 : -1));
         sortOrder[field] = 'asc';
+        if(field==='name')
+        document.querySelector("#sortn").innerHTML="↓"
+        if(field==='price')
+        document.querySelector("#sortp").innerHTML="↓"
     }
 
     readALL();
