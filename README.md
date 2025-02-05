@@ -45,3 +45,5 @@ All data is stored in **Local Storage**, ensuring persistence across page reload
 - **HTML, CSS, JavaScript**
 - **Bootstrap (Optional for UI Enhancements)**
 
+### View
+![CRUD-Operation](./assets/crud.png)
